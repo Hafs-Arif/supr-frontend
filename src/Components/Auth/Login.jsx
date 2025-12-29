@@ -190,7 +190,7 @@ const LoginComponent = () => {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            © 2024 Supr Service. All rights reserved.
+            © 2026 Supr Service. All rights reserved.
           </p>
         </div>
       </div>
