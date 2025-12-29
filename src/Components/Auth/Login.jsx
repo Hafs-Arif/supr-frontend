@@ -185,26 +185,6 @@ const LoginComponent = () => {
               </span>
             </button>
           </div>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs text-gray-600 text-center mb-2">
-              <strong>Demo Credentials:</strong>
-            </p>
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={fillDemoCredentials}
-                className="text-xs text-indigo-600 hover:text-indigo-500 font-medium mb-1"
-              >
-                Click to auto-fill demo credentials
-              </button>
-              <p className="text-xs text-gray-500">
-                Email: adminhomeservice@ex113.com<br />
-                Password: Admin123!
-              </p>
-            </div>
-          </div>
         </form>
 
         {/* Footer */}
