@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
   Filter, 
@@ -17,13 +17,9 @@ import {
   Wrench,
   RefreshCw,
   Mail,
-  Phone,
   Calendar,
   ShieldCheck,
-  AlertCircle,
-  MapPin,
-  Edit,
-  Trash2
+  AlertCircle
 } from 'lucide-react';
 
 import api from '../../../utils/api';
@@ -45,32 +41,20 @@ function Users() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   
-  // Dashboard stats
-  const [dashboardStats, setDashboardStats] = useState({
-    totalUsers: 0,
-    usersByRole: [],
-    usersByStatus: []
-  });
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionMessage, setActionMessage] = useState('');
+  const [suspendReason, setSuspendReason] = useState('Violation of terms of service');
   
   // User detail modal
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionMessage, setActionMessage] = useState('');
-  const [suspendReason, setSuspendReason] = useState('Violation of terms of service');
 
   // Fetch dashboard statistics
   const fetchDashboardStats = async () => {
     try {
       setDashboardLoading(true);
-      const res = await api.get('/admin/dashboard/stats');
-      const data = res?.data?.data || {};
-      
-      setDashboardStats({
-        totalUsers: data.totalUsers || 0,
-        usersByRole: Array.isArray(data.usersByRole) ? data.usersByRole : [],
-        usersByStatus: Array.isArray(data.usersByStatus) ? data.usersByStatus : []
-      });
+      await api.get('/admin/dashboard/stats');
+      // Stats fetched but not currently used - keeping for future use
       
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
@@ -80,7 +64,7 @@ function Users() {
   };
 
   // Fetch users from API with pagination
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -125,12 +109,12 @@ function Users() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, selectedRole, selectedStatus]);
 
   useEffect(() => {
     fetchDashboardStats();
     fetchUsers();
-  }, [page, limit, selectedRole, selectedStatus]);
+  }, [fetchUsers]);
 
   // Stats data based on current table data (reflects filters/search)
   const getStatsData = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../utils/api';
 
 const slugify = (s) =>
@@ -46,12 +46,7 @@ function Services() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  useEffect(() => {
-    fetchServices();
-    fetchCategories();
-  }, [page, limit]);
-
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -80,9 +75,9 @@ function Services() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const res = await api.get(`/admin/homeservices/categories`);
       const data = res.data;
@@ -101,7 +96,12 @@ function Services() {
       console.error('Error fetching categories:', error);
       setCategories([]);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchServices();
+    fetchCategories();
+  }, [fetchServices, fetchCategories]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
