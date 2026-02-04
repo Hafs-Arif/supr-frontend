@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   Filter, 
@@ -13,13 +14,38 @@ import {
   Eye,
   Plus,
   Download,
-  ChevronDown
+  ChevronDown,
+  X,
+  Minus,
+  ZoomIn
 } from 'lucide-react';
+import { GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
+
+const MAP_CONTAINER_STYLE = {
+  width: '100%',
+  height: '100%'
+};
+
+const MAP_OPTIONS = {
+  streetViewControl: false,
+  mapTypeControl: true,
+  fullscreenControl: true,
+  zoomControl: false,
+  gestureHandling: 'greedy',
+  clickableIcons: false,
+  disableDoubleClickZoom: false
+};
 
 function Zone() {
+  const navigate = useNavigate();
+  const mapRef = useRef(null);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   // Stats data
   const statsData = [
@@ -60,6 +86,8 @@ function Zone() {
       name: 'Downtown Core',
       location: 'Central Business District',
       priority: 'High',
+      lat: 31.5497,
+      lng: 74.3436,
       basePricing: {
         car: '$2.50',
         bike: '$1.20',
@@ -73,13 +101,16 @@ function Zone() {
       status: 'active',
       coverage: '15 sq km',
       population: '250,000',
-      lastUpdated: '2 hours ago'
+      lastUpdated: '2 hours ago',
+      radius: 3000
     },
     {
       id: 'ZONE002',
       name: 'University District',
       location: 'Campus Area',
       priority: 'Medium',
+      lat: 31.5204,
+      lng: 74.3587,
       basePricing: {
         car: '$2.00',
         bike: '$1.00',
@@ -93,13 +124,16 @@ function Zone() {
       status: 'active',
       coverage: '8 sq km',
       population: '180,000',
-      lastUpdated: '1 day ago'
+      lastUpdated: '1 day ago',
+      radius: 2000
     },
     {
       id: 'ZONE003',
       name: 'Airport Zone',
       location: 'International Airport',
       priority: 'High',
+      lat: 31.5217,
+      lng: 74.4781,
       basePricing: {
         car: '$3.50',
         bike: '$1.80',
@@ -113,13 +147,16 @@ function Zone() {
       status: 'active',
       coverage: '5 sq km',
       population: '50,000',
-      lastUpdated: '30 min ago'
+      lastUpdated: '30 min ago',
+      radius: 1500
     },
     {
       id: 'ZONE004',
       name: 'Suburban East',
       location: 'Residential Area East',
       priority: 'Low',
+      lat: 31.5500,
+      lng: 74.4500,
       basePricing: {
         car: '$1.80',
         bike: '$0.90',
@@ -133,13 +170,16 @@ function Zone() {
       status: 'inactive',
       coverage: '25 sq km',
       population: '120,000',
-      lastUpdated: '3 days ago'
+      lastUpdated: '3 days ago',
+      radius: 4000
     },
     {
       id: 'ZONE005',
       name: 'Industrial West',
       location: 'Industrial Complex',
       priority: 'Medium',
+      lat: 31.4800,
+      lng: 74.2800,
       basePricing: {
         car: '$2.20',
         bike: '$1.10',
@@ -153,7 +193,8 @@ function Zone() {
       status: 'active',
       coverage: '12 sq km',
       population: '75,000',
-      lastUpdated: '5 hours ago'
+      lastUpdated: '5 hours ago',
+      radius: 2500
     }
   ];
 
@@ -198,7 +239,14 @@ function Zone() {
 
   const getSurgeColor = (surge) => {
     if (!surge.active) return 'bg-gray-100 text-gray-800';
-    return surge.multiplier >= '2.0x' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800';
+    const multiplierValue = parseFloat(surge.multiplier);
+    return multiplierValue >= 2.0 ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800';
+  };
+
+  const getCircleColor = (surge) => {
+    if (!surge.active) return '#94a3b8';
+    const multiplierValue = parseFloat(surge.multiplier);
+    return multiplierValue >= 2.0 ? '#dc2626' : '#f97316';
   };
 
   const getSelectedStatusLabel = () => {
@@ -208,6 +256,26 @@ function Zone() {
   const handleExport = () => {
     console.log('Exporting zones data...');
   };
+
+  // Handle map load
+  const onMapLoad = useCallback((mapInstance) => {
+    mapRef.current = mapInstance;
+  }, []);
+
+  // Handle zoom changes
+  const handleZoomIn = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      mapRef.current.setZoom(Math.min(currentZoom + 1, 20));
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      mapRef.current.setZoom(Math.max(currentZoom - 1, 1));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
@@ -229,7 +297,10 @@ function Zone() {
               <Download size={18} />
               <span>Export Report</span>
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">
+            <button 
+              onClick={() => navigate('/admin/create-zone')}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
+            >
               <Plus size={18} />
               <span>Add Zone</span>
             </button>
@@ -350,9 +421,8 @@ function Zone() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredZones.map((zone, index) => (
+              {filteredZones.map((zone) => (
                 <tr key={zone.id} className="hover:bg-gray-50 transition">
-                  {/* Zone Info */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -367,21 +437,15 @@ function Zone() {
                       </div>
                     </div>
                   </td>
-
-                  {/* Location */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{zone.location}</div>
                     <div className="text-xs text-gray-500">Updated: {zone.lastUpdated}</div>
                   </td>
-
-                  {/* Priority */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(zone.priority)}`}>
                       {zone.priority}
                     </span>
                   </td>
-
-                  {/* Base Pricing */}
                   <td className="px-6 py-4">
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
@@ -398,8 +462,6 @@ function Zone() {
                       </div>
                     </div>
                   </td>
-
-                  {/* Surge */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col space-y-1">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getSurgeColor(zone.surge)}`}>
@@ -411,22 +473,26 @@ function Zone() {
                       </div>
                     </div>
                   </td>
-
-                  {/* Status */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(zone.status)}`}>
                       {getStatusIcon(zone.status)}
                       <span className="ml-1 capitalize">{zone.status}</span>
                     </span>
                   </td>
-
-                  {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
                       <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit Pricing">
                         <Edit size={16} />
                       </button>
-                      <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition" title="View Details">
+                      <button 
+                        onClick={() => {
+                          setSelectedZone(zone);
+                          setShowMapModal(true);
+                          setSelectedMarker(zone.id);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition" 
+                        title="View on Map"
+                      >
                         <Eye size={16} />
                       </button>
                       <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition">
@@ -441,9 +507,8 @@ function Zone() {
 
           {/* Mobile Cards */}
           <div className="lg:hidden p-4 space-y-4">
-            {filteredZones.map((zone, index) => (
+            {filteredZones.map((zone) => (
               <div key={zone.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                {/* Header */}
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -465,7 +530,6 @@ function Zone() {
                   </div>
                 </div>
 
-                {/* Details */}
                 <div className="space-y-3">
                   <div>
                     <div className="text-xs text-gray-600">Location</div>
@@ -483,7 +547,6 @@ function Zone() {
                     </div>
                   </div>
 
-                  {/* Pricing */}
                   <div>
                     <div className="text-xs text-gray-600 mb-1">Base Pricing</div>
                     <div className="grid grid-cols-3 gap-2 text-center text-xs">
@@ -502,7 +565,6 @@ function Zone() {
                     </div>
                   </div>
 
-                  {/* Surge */}
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="text-xs text-gray-600">Surge Pricing</div>
@@ -514,7 +576,6 @@ function Zone() {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-200">
                   <div className="text-xs text-gray-500">
                     Updated: {zone.lastUpdated}
@@ -523,7 +584,14 @@ function Zone() {
                     <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
                       <Edit size={16} />
                     </button>
-                    <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition">
+                    <button 
+                      onClick={() => {
+                        setSelectedZone(zone);
+                        setShowMapModal(true);
+                        setSelectedMarker(zone.id);
+                      }}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                    >
                       <Eye size={16} />
                     </button>
                   </div>
@@ -544,6 +612,205 @@ function Zone() {
           </div>
         )}
       </div>
+
+      {/* Map Modal - Using the same pattern as CreateZone */}
+      {showMapModal && selectedZone && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-5xl w-full h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Interactive Zone Map</h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Viewing: <span className="font-medium">{selectedZone.name}</span>
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowMapModal(false);
+                  setSelectedZone(null);
+                  setSelectedMarker(null);
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+              >
+                <X size={24} className="text-gray-600" />
+              </button>
+            </div>
+
+            {/* Map Legend */}
+            <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="flex items-center gap-6 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span>High Surge (2.0x+)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                  <span>Medium Surge (1.5x - 1.9x)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                  <span>No Surge (1.0x)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Content - Map */}
+            <div className="flex-1 relative overflow-hidden">
+              <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                <GoogleMap
+                  key="zone-view-map"
+                  mapContainerStyle={MAP_CONTAINER_STYLE}
+                  center={{
+                    lat: selectedZone.lat,
+                    lng: selectedZone.lng,
+                  }}
+                  zoom={12}
+                  onLoad={onMapLoad}
+                  options={MAP_OPTIONS}
+                >
+                  {/* Render all zones */}
+                  {filteredZones.map((zone) => {
+                    const isSelected = selectedMarker === zone.id;
+                    const circleColor = getCircleColor(zone.surge);
+                    
+                    return (
+                      <React.Fragment key={zone.id}>
+                        {/* Zone Circle */}
+                        <Circle
+                          center={{ lat: zone.lat, lng: zone.lng }}
+                          radius={zone.radius}
+                          options={{
+                            fillColor: circleColor,
+                            fillOpacity: isSelected ? 0.35 : 0.2,
+                            strokeColor: circleColor,
+                            strokeOpacity: isSelected ? 0.9 : 0.6,
+                            strokeWeight: isSelected ? 3 : 2,
+                          }}
+                        />
+                        
+                        {/* Marker */}
+                        <Marker
+                          position={{ lat: zone.lat, lng: zone.lng }}
+                          title={zone.name}
+                          onClick={() => setSelectedMarker(zone.id)}
+                          icon={{
+                            path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
+                            scale: isSelected ? 12 : 8,
+                            fillColor: circleColor,
+                            fillOpacity: 1,
+                            strokeColor: '#ffffff',
+                            strokeWeight: 2,
+                          }}
+                          label={
+                            isSelected
+                              ? {
+                                  text: zone.surge.multiplier,
+                                  color: '#ffffff',
+                                  fontSize: '10px',
+                                  fontWeight: 'bold',
+                                }
+                              : undefined
+                          }
+                        />
+                        
+                        {/* Info Window */}
+                        {isSelected && (
+                          <InfoWindow
+                            position={{ lat: zone.lat, lng: zone.lng }}
+                            onCloseClick={() => setSelectedMarker(null)}
+                          >
+                            <div className="p-2" style={{ maxWidth: '280px', minWidth: '250px' }}>
+                              <h3 className="font-bold text-gray-900 mb-2 text-base">{zone.name}</h3>
+                              <div className="space-y-1.5 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">ID:</span>
+                                  <span className="font-medium">{zone.id}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Status:</span>
+                                  <span className={`font-medium ${zone.status === 'active' ? 'text-green-600' : 'text-gray-600'}`}>
+                                    {zone.status === 'active' ? '🟢 Active' : '🔴 Inactive'}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Priority:</span>
+                                  <span className="font-medium">{zone.priority}</span>
+                                </div>
+                                <hr className="my-2" />
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Surge:</span>
+                                  <span className="font-bold text-orange-600">{zone.surge.multiplier}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Reason:</span>
+                                  <span className="text-gray-700">{zone.surge.reason}</span>
+                                </div>
+                                <hr className="my-2" />
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Car:</span>
+                                  <span className="font-medium">{zone.basePricing.car}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Bike:</span>
+                                  <span className="font-medium">{zone.basePricing.bike}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Premium:</span>
+                                  <span className="font-medium">{zone.basePricing.premium}</span>
+                                </div>
+                                <hr className="my-2" />
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Coverage:</span>
+                                  <span className="font-medium">{zone.coverage}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Population:</span>
+                                  <span className="font-medium">{zone.population}</span>
+                                </div>
+                                <div className="text-xs text-gray-500 mt-2">
+                                  Last updated: {zone.lastUpdated}
+                                </div>
+                              </div>
+                            </div>
+                          </InfoWindow>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </GoogleMap>
+              </LoadScript>
+
+              {/* Enhanced Zoom Controls - Same as CreateZone */}
+              <div className="absolute bottom-4 right-4 flex flex-col gap-2 bg-white rounded-lg shadow-lg border border-gray-200">
+                <button
+                  onClick={handleZoomIn}
+                  className="p-2.5 hover:bg-blue-50 transition rounded-t-lg group"
+                  title="Zoom in"
+                >
+                  <Plus size={20} className="text-gray-700 group-hover:text-blue-600" />
+                </button>
+                <div className="h-px bg-gray-200"></div>
+                <button
+                  onClick={handleZoomOut}
+                  className="p-2.5 hover:bg-blue-50 transition rounded-b-lg group"
+                  title="Zoom out"
+                >
+                  <Minus size={20} className="text-gray-700 group-hover:text-blue-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-between items-center p-6 border-t border-gray-200 bg-gray-50">
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Total Zones: {filteredZones.length}</span>
+                {mapRef.current && <> • Zoom: {mapRef.current.getZoom()?.toFixed(1)}</>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

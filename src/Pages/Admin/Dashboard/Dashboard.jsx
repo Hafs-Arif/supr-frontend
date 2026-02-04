@@ -37,127 +37,127 @@ import {
 
 const COLORS = ["#7c3aed", "#06b6d4", "#f97316", "#ef4444", "#10b981", "#8b5cf6"];
 
-// // Updated mock data for different time periods
-// const mockData = {
-//   daily: {
-//     summary: {
-//       users: 3248,
-//       riders: 514,
-//       providers: 186,
-//       complaints: 42,
-//       bookings: 2845,
-//       revenue: 89230,
-//       pendingBookings: 38,
-//       completedBookings: 2654,
-//       activeServices: 67,
-//       avgServiceTime: 45,
-//       popularServices: 8,
-//       serviceAreas: 18,
-//       rating: 4.7,
-//       cancelledBookings: 153,
-//     },
-//     timeseries: [
-//       { date: "10-27", users: 2950, riders: 480, providers: 170, bookings: 320, revenue: 8200 },
-//       { date: "10-28", users: 3020, riders: 485, providers: 172, bookings: 345, revenue: 8850 },
-//       { date: "10-29", users: 3080, riders: 492, providers: 175, bookings: 380, revenue: 9450 },
-//       { date: "10-30", users: 3140, riders: 498, providers: 178, bookings: 410, revenue: 10100 },
-//       { date: "10-31", users: 3190, riders: 505, providers: 180, bookings: 435, revenue: 10750 },
-//       { date: "11-01", users: 3220, riders: 510, providers: 183, bookings: 460, revenue: 11350 },
-//       { date: "11-02", users: 3248, riders: 514, providers: 186, bookings: 495, revenue: 12130 },
-//     ],
-//     bookingStatus: [
-//       { name: "Completed", value: 2654, color: "#10b981" },
-//       { name: "Pending", value: 38, color: "#f59e0b" },
-//       { name: "In Progress", value: 67, color: "#3b82f6" },
-//       { name: "Cancelled", value: 153, color: "#ef4444" },
-//     ],
-//     popularServices: [
-//       { name: "Ride Service", bookings: 845 },
-//       { name: "Home Cleaning", bookings: 678 },
-//       { name: "AC Repair", bookings: 492 },
-//       { name: "Plumbing", bookings: 365 },
-//       { name: "Electrical", bookings: 342 },
-//       { name: "Other Services", bookings: 423 },
-//     ]
-//   },
-//   weekly: {
-//     summary: {
-//       users: 15842,
-//       riders: 514,
-//       providers: 186,
-//       complaints: 215,
-//       bookings: 12845,
-//       revenue: 389230,
-//       pendingBookings: 125,
-//       completedBookings: 12254,
-//       activeServices: 67,
-//       avgServiceTime: 42,
-//       popularServices: 12,
-//       serviceAreas: 18,
-//       rating: 4.8,
-//       cancelledBookings: 466,
-//     },
-//     timeseries: [
-//       { date: "Week 1", users: 12500, riders: 450, providers: 160, bookings: 1800, revenue: 45000 },
-//       { date: "Week 2", users: 13500, riders: 470, providers: 168, bookings: 2100, revenue: 52000 },
-//       { date: "Week 3", users: 14500, riders: 490, providers: 175, bookings: 2400, revenue: 61000 },
-//       { date: "Week 4", users: 15842, riders: 514, providers: 186, bookings: 2850, revenue: 72000 },
-//     ],
-//     bookingStatus: [
-//       { name: "Completed", value: 12254, color: "#10b981" },
-//       { name: "Pending", value: 125, color: "#f59e0b" },
-//       { name: "In Progress", value: 67, color: "#3b82f6" },
-//       { name: "Cancelled", value: 466, color: "#ef4444" },
-//     ],
-//     popularServices: [
-//       { name: "Ride Service", bookings: 3845 },
-//       { name: "Home Cleaning", bookings: 2678 },
-//       { name: "AC Repair", bookings: 1892 },
-//       { name: "Plumbing", bookings: 1365 },
-//       { name: "Electrical", bookings: 1342 },
-//       { name: "Other Services", bookings: 1723 },
-//     ]
-//   },
-//   monthly: {
-//     summary: {
-//       users: 45842,
-//       riders: 514,
-//       providers: 186,
-//       complaints: 842,
-//       bookings: 35845,
-//       revenue: 1289230,
-//       pendingBookings: 342,
-//       completedBookings: 34254,
-//       activeServices: 67,
-//       avgServiceTime: 40,
-//       popularServices: 15,
-//       serviceAreas: 18,
-//       rating: 4.9,
-//       cancelledBookings: 1253,
-//     },
-//     timeseries: [
-//       { date: "Jan", users: 32000, riders: 420, providers: 150, bookings: 8500, revenue: 285000 },
-//       { date: "Feb", users: 35800, riders: 445, providers: 162, bookings: 9200, revenue: 315000 },
-//       { date: "Mar", users: 39500, riders: 470, providers: 170, bookings: 10500, revenue: 365000 },
-//       { date: "Apr", users: 42800, riders: 490, providers: 178, bookings: 11800, revenue: 425000 },
-//       { date: "May", users: 45842, riders: 514, providers: 186, bookings: 12845, revenue: 489000 },
-//     ],
-//     bookingStatus: [
-//       { name: "Completed", value: 34254, color: "#10b981" },
-//       { name: "Pending", value: 342, color: "#f59e0b" },
-//       { name: "In Progress", value: 67, color: "#3b82f6" },
-//       { name: "Cancelled", value: 1253, color: "#ef4444" },
-//     ],
-//     popularServices: [
-//       { name: "Ride Service", bookings: 11845 },
-//       { name: "Home Cleaning", bookings: 8678 },
-//       { name: "AC Repair", bookings: 5892 },
-//       { name: "Plumbing", bookings: 4365 },
-//       { name: "Electrical", bookings: 4342 },
-//       { name: "Other Services", bookings: 4723 },
-//     ]
-//   }
-// };
+// Updated mock data for different time periods
+const mockData = {
+  daily: {
+    summary: {
+      users: 3248,
+      riders: 514,
+      providers: 186,
+      complaints: 42,
+      bookings: 2845,
+      revenue: 89230,
+      pendingBookings: 38,
+      completedBookings: 2654,
+      activeServices: 67,
+      avgServiceTime: 45,
+      popularServices: 8,
+      serviceAreas: 18,
+      rating: 4.7,
+      cancelledBookings: 153,
+    },
+    timeseries: [
+      { date: "10-27", users: 2950, riders: 480, providers: 170, bookings: 320, revenue: 8200 },
+      { date: "10-28", users: 3020, riders: 485, providers: 172, bookings: 345, revenue: 8850 },
+      { date: "10-29", users: 3080, riders: 492, providers: 175, bookings: 380, revenue: 9450 },
+      { date: "10-30", users: 3140, riders: 498, providers: 178, bookings: 410, revenue: 10100 },
+      { date: "10-31", users: 3190, riders: 505, providers: 180, bookings: 435, revenue: 10750 },
+      { date: "11-01", users: 3220, riders: 510, providers: 183, bookings: 460, revenue: 11350 },
+      { date: "11-02", users: 3248, riders: 514, providers: 186, bookings: 495, revenue: 12130 },
+    ],
+    bookingStatus: [
+      { name: "Completed", value: 2654, color: "#10b981" },
+      { name: "Pending", value: 38, color: "#f59e0b" },
+      { name: "In Progress", value: 67, color: "#3b82f6" },
+      { name: "Cancelled", value: 153, color: "#ef4444" },
+    ],
+    popularServices: [
+      { name: "Ride Service", bookings: 845 },
+      { name: "Home Cleaning", bookings: 678 },
+      { name: "AC Repair", bookings: 492 },
+      { name: "Plumbing", bookings: 365 },
+      { name: "Electrical", bookings: 342 },
+      { name: "Other Services", bookings: 423 },
+    ]
+  },
+  weekly: {
+    summary: {
+      users: 15842,
+      riders: 514,
+      providers: 186,
+      complaints: 215,
+      bookings: 12845,
+      revenue: 389230,
+      pendingBookings: 125,
+      completedBookings: 12254,
+      activeServices: 67,
+      avgServiceTime: 42,
+      popularServices: 12,
+      serviceAreas: 18,
+      rating: 4.8,
+      cancelledBookings: 466,
+    },
+    timeseries: [
+      { date: "Week 1", users: 12500, riders: 450, providers: 160, bookings: 1800, revenue: 45000 },
+      { date: "Week 2", users: 13500, riders: 470, providers: 168, bookings: 2100, revenue: 52000 },
+      { date: "Week 3", users: 14500, riders: 490, providers: 175, bookings: 2400, revenue: 61000 },
+      { date: "Week 4", users: 15842, riders: 514, providers: 186, bookings: 2850, revenue: 72000 },
+    ],
+    bookingStatus: [
+      { name: "Completed", value: 12254, color: "#10b981" },
+      { name: "Pending", value: 125, color: "#f59e0b" },
+      { name: "In Progress", value: 67, color: "#3b82f6" },
+      { name: "Cancelled", value: 466, color: "#ef4444" },
+    ],
+    popularServices: [
+      { name: "Ride Service", bookings: 3845 },
+      { name: "Home Cleaning", bookings: 2678 },
+      { name: "AC Repair", bookings: 1892 },
+      { name: "Plumbing", bookings: 1365 },
+      { name: "Electrical", bookings: 1342 },
+      { name: "Other Services", bookings: 1723 },
+    ]
+  },
+  monthly: {
+    summary: {
+      users: 45842,
+      riders: 514,
+      providers: 186,
+      complaints: 842,
+      bookings: 35845,
+      revenue: 1289230,
+      pendingBookings: 342,
+      completedBookings: 34254,
+      activeServices: 67,
+      avgServiceTime: 40,
+      popularServices: 15,
+      serviceAreas: 18,
+      rating: 4.9,
+      cancelledBookings: 1253,
+    },
+    timeseries: [
+      { date: "Jan", users: 32000, riders: 420, providers: 150, bookings: 8500, revenue: 285000 },
+      { date: "Feb", users: 35800, riders: 445, providers: 162, bookings: 9200, revenue: 315000 },
+      { date: "Mar", users: 39500, riders: 470, providers: 170, bookings: 10500, revenue: 365000 },
+      { date: "Apr", users: 42800, riders: 490, providers: 178, bookings: 11800, revenue: 425000 },
+      { date: "May", users: 45842, riders: 514, providers: 186, bookings: 12845, revenue: 489000 },
+    ],
+    bookingStatus: [
+      { name: "Completed", value: 34254, color: "#10b981" },
+      { name: "Pending", value: 342, color: "#f59e0b" },
+      { name: "In Progress", value: 67, color: "#3b82f6" },
+      { name: "Cancelled", value: 1253, color: "#ef4444" },
+    ],
+    popularServices: [
+      { name: "Ride Service", bookings: 11845 },
+      { name: "Home Cleaning", bookings: 8678 },
+      { name: "AC Repair", bookings: 5892 },
+      { name: "Plumbing", bookings: 4365 },
+      { name: "Electrical", bookings: 4342 },
+      { name: "Other Services", bookings: 4723 },
+    ]
+  }
+};
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("daily");
@@ -226,17 +226,17 @@ export default function Dashboard() {
         const revenueData = revenueResp.status === 'fulfilled' ? revenueResp.value?.data?.data : null;
 
         // Prefer homeservices dashboard structure for weekly stats, but use admin stats for top-level totals when present
-        const sData = statsData || hsData || overviewData;
-        const tData = (hsData && hsData.weeklyStats?.dailyBreakdown) || (overviewData && overviewData.weeklyStats?.dailyBreakdown) || (statsData && statsData.weeklyStats?.dailyBreakdown) || [];
+        const sData = statsData || hsData || overviewData || mockData[timeRange].summary;
+        const tData = (hsData && hsData.weeklyStats?.dailyBreakdown) || (overviewData && overviewData.weeklyStats?.dailyBreakdown) || (statsData && statsData.weeklyStats?.dailyBreakdown) || mockData[timeRange].timeseries;
         const bsData = (hsData && hsData.today) || (overviewData && overviewData.today) || (statsData && statsData.today)
           ? [
               { name: "Completed", value: (hsData || statsData)?.today?.completedOrders || 0, color: "#10b981" },
               { name: "Pending", value: (hsData || statsData)?.today?.pendingOrders || 0, color: "#f59e0b" },
               { name: "In Progress", value: (hsData || statsData)?.today?.inProgressOrders || 0, color: "#3b82f6" },
             ]
-          : [];
+          : mockData[timeRange].bookingStatus;
 
-        const psData = (overviewData && overviewData.popularServices) || [];
+        const psData = (overviewData && overviewData.popularServices) || mockData[timeRange].popularServices;
 
         // set analytics-specific data
         if (overviewData) setAnalyticsOverview(overviewData);
@@ -245,20 +245,20 @@ export default function Dashboard() {
 
         // Derive a normalized summary used by the UI from available endpoints
         const finalSummary = {
-          users: statsData?.totalUsers ?? overviewData?.summary?.totalCustomers ?? hsData?.today?.newCustomers ?? [],
-          riders: overviewData?.summary?.riders ?? hsData?.today?.activeRiders ?? [],
-          providers: overviewData?.summary?.providers ?? providersData?.total ?? hsData?.today?.activeProviders ?? [],
-          complaints: overviewData?.summary?.complaints ?? hsData?.today?.complaints ?? [],
-          bookings: overviewData?.summary?.totalOrders ?? hsData?.today?.totalOrders ?? [],
-          revenue: overviewData?.summary?.totalRevenue ?? hsData?.today?.revenue ?? [],
-          pendingBookings: overviewData?.summary?.pendingOrders ?? hsData?.today?.pendingOrders ?? [],
-          completedBookings: overviewData?.summary?.completedOrders ?? hsData?.today?.completedOrders ?? [],
-          activeServices: overviewData?.summary?.activeServices ?? hsData?.today?.activeProviders ?? [],
-          avgServiceTime: overviewData?.summary?.averageOrderValue ?? hsData?.today?.avgServiceTime ?? [],
-          popularServices: overviewData?.popularServices ?? [],
-          serviceAreas: overviewData?.summary?.serviceAreas ?? [],
-          rating: overviewData?.summary?.averageRating ?? hsData?.weeklyStats?.averageRating ?? [],
-          cancelledBookings: overviewData?.summary?.cancelledOrders ?? [],
+          users: statsData?.totalUsers ?? overviewData?.summary?.totalCustomers ?? hsData?.today?.newCustomers ?? mockData[timeRange].summary.users,
+          riders: overviewData?.summary?.riders ?? hsData?.today?.activeRiders ?? mockData[timeRange].summary.riders,
+          providers: overviewData?.summary?.providers ?? providersData?.total ?? hsData?.today?.activeProviders ?? mockData[timeRange].summary.providers,
+          complaints: overviewData?.summary?.complaints ?? hsData?.today?.complaints ?? mockData[timeRange].summary.complaints,
+          bookings: overviewData?.summary?.totalOrders ?? hsData?.today?.totalOrders ?? mockData[timeRange].summary.bookings,
+          revenue: overviewData?.summary?.totalRevenue ?? hsData?.today?.revenue ?? mockData[timeRange].summary.revenue,
+          pendingBookings: overviewData?.summary?.pendingOrders ?? hsData?.today?.pendingOrders ?? mockData[timeRange].summary.pendingBookings,
+          completedBookings: overviewData?.summary?.completedOrders ?? hsData?.today?.completedOrders ?? mockData[timeRange].summary.completedBookings,
+          activeServices: overviewData?.summary?.activeServices ?? hsData?.today?.activeProviders ?? mockData[timeRange].summary.activeServices,
+          avgServiceTime: overviewData?.summary?.averageOrderValue ?? hsData?.today?.avgServiceTime ?? mockData[timeRange].summary.avgServiceTime,
+          popularServices: overviewData?.popularServices ?? mockData[timeRange].popularServices,
+          serviceAreas: overviewData?.summary?.serviceAreas ?? mockData[timeRange].summary.serviceAreas,
+          rating: overviewData?.summary?.averageRating ?? hsData?.weeklyStats?.averageRating ?? mockData[timeRange].summary.rating,
+          cancelledBookings: overviewData?.summary?.cancelledOrders ?? mockData[timeRange].summary.cancelledBookings,
         };
 
         if (!cancelled) {
@@ -274,10 +274,10 @@ export default function Dashboard() {
       } catch (err) {
         // fallback to mock data
         if (!cancelled) {
-          setSummary([]);
-          setTimeseries([]);
-          setBookingStatus([]);
-          setPopularServices([]);
+          setSummary(mockData[timeRange].summary);
+          setTimeseries(mockData[timeRange].timeseries);
+          setBookingStatus(mockData[timeRange].bookingStatus);
+          setPopularServices(mockData[timeRange].popularServices);
           setLastUpdated(new Date().toISOString());
         }
       } finally {

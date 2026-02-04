@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { 
   Search, 
   Filter, 
@@ -16,6 +16,27 @@ import {
   Bike,
   Clock
 } from 'lucide-react';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+
+const MAP_CONTAINER_STYLE = {
+  width: '100%',
+  height: '100%'
+};
+
+const INITIAL_CENTER = {
+  lat: 31.5497,
+  lng: 74.3436
+};
+
+const MAP_OPTIONS = {
+  streetViewControl: false,
+  mapTypeControl: true,
+  fullscreenControl: true,
+  zoomControl: false,
+  gestureHandling: 'greedy',
+  clickableIcons: false,
+  disableDoubleClickZoom: false
+};
 
 function MapView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +44,9 @@ function MapView() {
   const [selectedVehicle, setSelectedVehicle] = useState('all');
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [isVehicleDropdownOpen, setIsVehicleDropdownOpen] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [mapZoom, setMapZoom] = useState(12);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const mapRef = useRef(null);
 
   // Zone data for cards
   const zoneCards = [
@@ -36,7 +59,9 @@ function MapView() {
       vehicleCount: 45,
       activeTrips: 23,
       area: '15 sq km',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      lat: 31.5497,
+      lng: 74.3436
     },
     {
       id: 'ZONE002',
@@ -47,7 +72,9 @@ function MapView() {
       vehicleCount: 32,
       activeTrips: 18,
       area: '8 sq km',
-      color: 'bg-green-500'
+      color: 'bg-green-500',
+      lat: 31.5204,
+      lng: 74.3587
     },
     {
       id: 'ZONE003',
@@ -58,7 +85,9 @@ function MapView() {
       vehicleCount: 28,
       activeTrips: 15,
       area: '5 sq km',
-      color: 'bg-orange-500'
+      color: 'bg-orange-500',
+      lat: 31.5217,
+      lng: 74.1781
     },
     {
       id: 'ZONE004',
@@ -69,18 +98,10 @@ function MapView() {
       vehicleCount: 12,
       activeTrips: 5,
       area: '25 sq km',
-      color: 'bg-gray-500'
+      color: 'bg-gray-500',
+      lat: 31.5500,
+      lng: 74.4500
     }
-  ];
-
-  // Map markers data
-  const mapMarkers = [
-    { id: 1, x: 25, y: 30, zone: 'ZONE001', status: 'active', surge: '1.8x' },
-    { id: 2, x: 60, y: 45, zone: 'ZONE002', status: 'active', surge: '1.0x' },
-    { id: 3, x: 75, y: 20, zone: 'ZONE003', status: 'active', surge: '2.2x' },
-    { id: 4, x: 40, y: 70, zone: 'ZONE004', status: 'inactive', surge: '1.0x' },
-    { id: 5, x: 15, y: 55, zone: 'ZONE005', status: 'active', surge: '1.5x' },
-    { id: 6, x: 80, y: 60, zone: 'ZONE006', status: 'active', surge: '1.2x' }
   ];
 
   const statusFilters = [
@@ -103,10 +124,6 @@ function MapView() {
     return matchesSearch && matchesStatus;
   });
 
-  const filteredMarkers = mapMarkers.filter(marker => {
-    return selectedStatus === 'all' || marker.status === selectedStatus;
-  });
-
   const getStatusColor = (status) => {
     return status === 'active' ? 'bg-green-500' : 'bg-gray-400';
   };
@@ -126,17 +143,29 @@ function MapView() {
     return vehicleFilters.find(filter => filter.value === selectedVehicle)?.label || 'All Vehicles';
   };
 
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 0.2, 2));
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
-  };
-
   const handleExport = () => {
     console.log('Exporting map data...');
   };
+
+  // Handle map load
+  const onMapLoad = useCallback((mapInstance) => {
+    mapRef.current = mapInstance;
+  }, []);
+
+  // Handle zoom changes
+  const handleZoomIn = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      mapRef.current.setZoom(Math.min(currentZoom + 1, 20));
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      mapRef.current.setZoom(Math.max(currentZoom - 1, 1));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
@@ -286,104 +315,102 @@ function MapView() {
             </div>
 
             {/* Map Container */}
-            <div className="relative bg-gradient-to-br from-blue-50 to-green-50 h-96 xl:h-[500px] overflow-hidden">
+            <div className="relative bg-white h-96 xl:h-[500px] overflow-hidden flex flex-col">
               {/* Zoom Controls */}
               <div className="absolute top-4 right-4 z-10 flex flex-col space-y-2">
                 <button
                   onClick={handleZoomIn}
                   className="p-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition"
+                  title="Zoom in"
                 >
                   <ZoomIn size={18} />
                 </button>
                 <button
                   onClick={handleZoomOut}
                   className="p-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition"
+                  title="Zoom out"
                 >
                   <ZoomOut size={18} />
                 </button>
               </div>
 
-              {/* Map Background */}
-              <div 
-                className="w-full h-full relative"
-                style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center' }}
-              >
-                {/* Simple Grid Pattern using CSS */}
-                <div 
-                  className="absolute inset-0 opacity-10"
-                  style={{
-                    backgroundImage: `
-                      linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '20px 20px'
+              {/* Google Map */}
+              <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                <GoogleMap
+                  mapContainerStyle={MAP_CONTAINER_STYLE}
+                  center={INITIAL_CENTER}
+                  zoom={mapZoom}
+                  onLoad={onMapLoad}
+                  onZoomChanged={() => {
+                    if (mapRef.current) {
+                      setMapZoom(mapRef.current.getZoom());
+                    }
                   }}
-                ></div>
-                
-                {/* Major Roads */}
-                <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 transform -translate-y-1/2"></div>
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-300 transform -translate-x-1/2"></div>
-                <div className="absolute top-1/4 left-0 right-0 h-0.5 bg-gray-200"></div>
-                <div className="absolute top-3/4 left-0 right-0 h-0.5 bg-gray-200"></div>
-                <div className="absolute left-1/4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-                <div className="absolute left-3/4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                  options={MAP_OPTIONS}
+                >
+                  {/* Render zone markers */}
+                  {filteredZoneCards.map((zone) => {
+                    const isSelected = selectedMarker === zone.id;
+                    const surgeLevel = parseFloat(zone.surge);
+                    let markerColor = '#94a3b8'; // gray for 1.0x
+                    if (surgeLevel >= 2.0) markerColor = '#dc2626'; // red for 2.0x+
+                    else if (surgeLevel >= 1.5) markerColor = '#f97316'; // orange for 1.5x+
+                    else if (surgeLevel > 1.0) markerColor = '#eab308'; // yellow for medium
+                    else markerColor = '#22c55e'; // green for normal
 
-                {/* Map Markers */}
-                {filteredMarkers.map((marker) => (
-                  <div
-                    key={marker.id}
-                    className={`absolute w-6 h-6 rounded-full border-2 border-white shadow-lg cursor-pointer transform -translate-x-1/2 -translate-y-1/2 ${
-                      getStatusColor(marker.status)
-                    }`}
-                    style={{
-                      left: `${marker.x}%`,
-                      top: `${marker.y}%`,
-                    }}
-                    title={`Zone: ${marker.zone} | Surge: ${marker.surge}`}
-                  >
-                    {/* Surge Badge */}
-                    <div className={`absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs text-white flex items-center justify-center font-bold ${getSurgeColor(marker.surge)}`}>
-                      {marker.surge.replace('x', '')}
-                    </div>
-                  </div>
-                ))}
-
-                {/* Zone Areas */}
-                <div className="absolute w-40 h-40 bg-blue-200 opacity-20 rounded-full" style={{ left: '15%', top: '20%' }}></div>
-                <div className="absolute w-32 h-32 bg-green-200 opacity-20 rounded-lg" style={{ left: '55%', top: '35%' }}></div>
-                <div className="absolute w-28 h-28 bg-orange-200 opacity-20 rounded-lg" style={{ left: '70%', top: '10%' }}></div>
-                <div className="absolute w-48 h-48 bg-gray-200 opacity-20 rounded-full" style={{ left: '30%', top: '60%' }}></div>
-
-                {/* Legend */}
-                <div className="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-                  <div className="text-sm font-medium text-gray-800 mb-2">Zone Status</div>
-                  <div className="space-y-1 text-xs">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-gray-600">Active Zone</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                      <span className="text-gray-600">Inactive Zone</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-gray-600">High Surge (2.0x+)</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                      <span className="text-gray-600">Medium Surge (1.5x+)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    return (
+                      <Marker
+                        key={zone.id}
+                        position={{ lat: zone.lat, lng: zone.lng }}
+                        title={zone.city}
+                        onClick={() => setSelectedMarker(isSelected ? null : zone.id)}
+                        icon={{
+                          path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
+                          scale: isSelected ? 12 : 8,
+                          fillColor: markerColor,
+                          fillOpacity: 1,
+                          strokeColor: '#ffffff',
+                          strokeWeight: 2,
+                        }}
+                        label={
+                          isSelected
+                            ? {
+                                text: zone.surge,
+                                color: '#ffffff',
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                              }
+                            : undefined
+                        }
+                      >
+                        {isSelected && (
+                          <InfoWindow onCloseClick={() => setSelectedMarker(null)}>
+                            <div className="p-2" style={{ maxWidth: '250px', minWidth: '200px' }}>
+                              <h3 className="font-bold text-gray-900 mb-2">{zone.city}</h3>
+                              <div className="space-y-1 text-sm text-gray-600">
+                                <p><strong>Zone ID:</strong> {zone.id}</p>
+                                <p><strong>Status:</strong> {zone.status === 'active' ? '🟢 Active' : '🔴 Inactive'}</p>
+                                <p><strong>Surge:</strong> <span className="font-bold text-orange-600">{zone.surge}</span></p>
+                                <p><strong>Base Price:</strong> {zone.basePrice}</p>
+                                <p><strong>Coverage Area:</strong> {zone.area}</p>
+                                <p><strong>Vehicles:</strong> {zone.vehicleCount}</p>
+                                <p><strong>Active Trips:</strong> {zone.activeTrips}</p>
+                              </div>
+                            </div>
+                          </InfoWindow>
+                        )}
+                      </Marker>
+                    );
+                  })}
+                </GoogleMap>
+              </LoadScript>
             </div>
 
             {/* Map Footer */}
             <div className="p-4 border-t border-gray-200 bg-gray-50">
               <div className="flex justify-between items-center text-sm text-gray-600">
-                <div>Total Zones: {filteredMarkers.length}</div>
-                <div>Zoom: {(zoomLevel * 100).toFixed(0)}%</div>
+                <div>Total Zones: {filteredZoneCards.length}</div>
+                <div>Zoom: {mapZoom}</div>
               </div>
             </div>
           </div>

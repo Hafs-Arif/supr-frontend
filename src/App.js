@@ -14,12 +14,19 @@ import Earning from "./Pages/Admin/ServiceProviders/Earning";
 import ServiceProviders from "./Pages/Admin/ServiceProviders/ServiceProviders";
 import PendingVarification from "./Pages/Admin/ServiceProviders/PendingVarification";
 import Zone from "./Pages/Admin/Pricing&Zone/Zone";
-import MapView from "./Pages/Admin/Pricing&Zone/MapView";
-import CreatyeZone from "./Pages/Admin/Pricing&Zone/CreatyeZone";
+import CreatyeZone from "./Pages/Admin/Pricing&Zone/CreateZone";
+import SurgePricingMap from "./Pages/Admin/Pricing&Zone/SurgePricingMap";
 import Services from "./Pages/Admin/Trip/Services";
 import Addons from "./Pages/Admin/Trip/Addons";
 import Analytics from "./Pages/Admin/Analytics/Analytics";
 import Orders from "./Pages/Admin/Orders/Orders";
+import SOSList from "./Pages/Admin/SOS/SOSList";
+import SOSActive from "./Pages/Admin/SOS/SOSActive";
+import SOSTrigger from "./Pages/Admin/SOS/SOSTrigger";
+import SOSDetails from "./Pages/Admin/SOS/SOSDetails";
+import FraudStats from "./Pages/Admin/Fraud/FraudStats";
+import FraudPatterns from "./Pages/Admin/Fraud/FraudPatterns";
+import FraudDetails from "./Pages/Admin/Fraud/FraudDetails";
 import { AuthProvider, useAuth } from "./Components/Auth/AuthContext";
 import ProtectedRoute from "./Components/Auth/ProtectedRoute";
 
@@ -59,11 +66,18 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="orders" element={<Orders />} />
             <Route path="all-zones" element={<Zone />} />
-            <Route path="map-view" element={<MapView />} />
+            <Route path="map-view" element={<SurgePricingMap />} />
             <Route path="create-zone" element={<CreatyeZone />} />
             <Route path="banners-and-offers" element={<BannersANDoffers />} />
             <Route path="manage-admin" element={<ManageAdmin />} />
             <Route path="add-admin" element={<AddAdmin />} />
+            <Route path="sos" element={<SOSList />} />
+            <Route path="sos/active" element={<SOSActive />} />
+            <Route path="sos/trigger" element={<SOSTrigger />} />
+            <Route path="sos/:id" element={<SOSDetails />} />
+            <Route path="fraud/stats" element={<FraudStats />} />
+            <Route path="fraud/patterns" element={<FraudPatterns />} />
+            <Route path="fraud/patterns/:id" element={<FraudDetails />} />
           </Route>
         </Routes>
       </Router>

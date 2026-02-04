@@ -12,7 +12,8 @@ import {
   Bus,
   ShoppingCart,
   MapIcon,
-  CreditCard
+  CreditCard,
+  AlertTriangle
 } from "lucide-react";
 import { TrendingUp } from "lucide-react";
 import { GiRank1 } from "react-icons/gi";
@@ -61,29 +62,51 @@ function Sidebar({ isOpen, toggleSidebar, closeSidebar }) {
         { path: "/admin/all-users", label: "All Users" },
       ]
     },
-    // {
-    //   path: "#",
-    //   icon: <MapIcon size={18} />,
-    //   label: "Pricing & Zones",
-    //   hasDropdown: true,
-    //   dropdownName: "zones",
-    //   dropdownItems: [
-    //     { path: "/admin/all-zones", label: "All Zones" },
-    //     { path: "/admin/map-view", label: "Map View" },
-    //     { path: "/admin/create-zone", label: "Create Zone" },
-    //   ]
-    // },
+    {
+      path: "#",
+      icon: <MapIcon size={18} />,
+      label: "Zones",
+      hasDropdown: true,
+      dropdownName: "zones",
+      dropdownItems: [
+        { path: "/admin/all-zones", label: "All Zones" },
+        { path: "/admin/map-view", label: "Surge Map" },
+      ]
+    },
     // { path: "/admin/payments", icon: <CreditCard size={18} />, label: "Payments" },
     // { path: "/admin/analytics", icon: <GiRank1 size={18} />, label: "Analytics" }, // Fixed spelling
     // { path: "/admin/dashboard/stats", icon: <TrendingUp size={18} />, label: "Admin Stats" },
 
     { path: "/admin/banners-and-offers", icon: <Gift size={18} />, label: "Banners & Offers" },
+    {
+      path: "#",
+      icon: <MapIcon size={18} />,
+      label: "SOS",
+      hasDropdown: true,
+      dropdownName: "sos",
+      dropdownItems: [
+        { path: "/admin/sos", label: "SOS List" },
+        { path: "/admin/sos/active", label: "Active SOS" },
+        { path: "/admin/sos/trigger", label: "Trigger SOS" },
+      ]
+    },
+    {
+      path: "#",
+      icon: <AlertTriangle size={18} />,
+      label: "Fraud Detection",
+      hasDropdown: true,
+      dropdownName: "fraud",
+      dropdownItems: [
+        { path: "/admin/fraud/stats", label: "Dashboard" },
+        { path: "/admin/fraud/patterns", label: "Fraud Patterns" },
+      ]
+    },
     { path: "/admin/manage-admin", icon: <User size={18} />, label: "Manage Admins" },
   ];
 
   // Check if any dropdown item is active for highlighting parent
   const isDropdownActive = (dropdownItems) => {
-    return dropdownItems.some(item => location.pathname === item.path);
+    return dropdownItems.some(item => location.pathname === item.path);  
   };
 
   return (
