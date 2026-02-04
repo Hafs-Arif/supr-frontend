@@ -31,44 +31,13 @@ function ServiceProviders() {
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [providers, setProviders] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [suspendReason, setSuspendReason] = useState('Violation of terms of service');
   const api = require('../../../utils/api').default;
 
-  // Stats data placeholder - will be computed from providers list below
-
-  // Service categories
-  const serviceCategories = [
-    { value: 'all', label: 'All Services', icon: <Users size={16} /> },
-    { value: 'home-cleaning', label: 'Home Cleaning', icon: <Home size={16} /> },
-    { value: 'driver', label: 'Driver Service', icon: <Car size={16} /> },
-    { value: 'plumbing', label: 'Plumbing', icon: <Wrench size={16} /> },
-    { value: 'tutoring', label: 'Tutoring', icon: <GraduationCap size={16} /> },
-    { value: 'healthcare', label: 'Healthcare', icon: <Heart size={16} /> },
-    { value: 'laundry', label: 'Laundry', icon: <Home size={16} /> }
-  ];
-
-  // Verification status filters
-  const statusFilters = [
-    { value: 'all', label: 'All Status', icon: <Users size={16} /> },
-    { value: 'verified', label: 'Verified', icon: <CheckCircle size={16} /> },
-    { value: 'pending', label: 'Pending', icon: <Clock size={16} /> },
-    { value: 'rejected', label: 'Rejected', icon: <XCircle size={16} /> }
-  ];
-
-  // providers will be fetched from admin API
-  
-  // Fetch providers on mount and when filters change
-  React.useEffect(() => {
-    fetchProviders();
-  }, [selectedService, selectedStatus]);
-
-  const fetchProviders = async () => {
+  // Fetch providers - defined before useEffect to avoid use-before-define
+  const fetchProviders = React.useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
       const params = { role: 'service_provider', page: 1, limit: 100 };
       const res = await api.get('/admin/users', { params });
       const body = res?.data || {};
@@ -94,28 +63,35 @@ function ServiceProviders() {
       setProviders(mapped);
     } catch (err) {
       console.error('Failed to fetch providers', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to load providers');
       setProviders([]);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [api]);
+  const serviceCategories = [
+    { value: 'all', label: 'All Services', icon: <Users size={16} /> },
+    { value: 'home-cleaning', label: 'Home Cleaning', icon: <Home size={16} /> },
+    { value: 'driver', label: 'Driver Service', icon: <Car size={16} /> },
+    { value: 'plumbing', label: 'Plumbing', icon: <Wrench size={16} /> },
+    { value: 'tutoring', label: 'Tutoring', icon: <GraduationCap size={16} /> },
+    { value: 'healthcare', label: 'Healthcare', icon: <Heart size={16} /> },
+    { value: 'laundry', label: 'Laundry', icon: <Home size={16} /> }
+  ];
+
+  // Verification status filters
+  const statusFilters = [
+    { value: 'all', label: 'All Status', icon: <Users size={16} /> },
+    { value: 'verified', label: 'Verified', icon: <CheckCircle size={16} /> },
+    { value: 'pending', label: 'Pending', icon: <Clock size={16} /> },
+    { value: 'rejected', label: 'Rejected', icon: <XCircle size={16} /> }
+  ];
+
+  // providers will be fetched from admin API
+  
+  // Fetch providers on mount and when filters change
+  React.useEffect(() => {
+    fetchProviders();
+  }, [selectedService, selectedStatus, fetchProviders]);
 
   // Approve by activating the user status (backend does not expose provider-profile id here)
-  const approveProvider = async (userId) => {
-    try {
-      setActionLoading(true);
-      await api.put(`/admin/users/${userId}/status`, { status: 'active' });
-      // refresh list
-      await fetchProviders();
-    } catch (err) {
-      console.error('Approve failed', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to approve provider');
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
   const suspendProvider = async (userId) => {
     try {
       const reason = window.prompt('Enter suspension reason:', 'Violation of terms of service');
@@ -125,7 +101,6 @@ function ServiceProviders() {
       await fetchProviders();
     } catch (err) {
       console.error('Suspend failed', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to suspend provider');
     } finally {
       setActionLoading(false);
     }
@@ -138,7 +113,6 @@ function ServiceProviders() {
       await fetchProviders();
     } catch (err) {
       console.error('Update status failed', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to update status');
     } finally {
       setActionLoading(false);
     }
@@ -250,24 +224,6 @@ function ServiceProviders() {
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric'
       });
-    } catch (e) {
-      return 'Invalid date';
-    }
-  };
-
-  const getTimeAgo = (dateString) => {
-    if (!dateString) return 'Never';
-    try {
-      const date = new Date(dateString);
-      const now = new Date();
-      const diffInMs = now - date;
-      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-      const diffInDays = Math.floor(diffInHours / 24);
-
-      if (diffInHours < 1) return 'Just now';
-      if (diffInHours < 24) return `${diffInHours}h ago`;
-      if (diffInDays < 7) return `${diffInDays}d ago`;
-      return formatDate(dateString);
     } catch (e) {
       return 'Invalid date';
     }
@@ -895,7 +851,7 @@ function ServiceProviders() {
                   <button
                     onClick={() => {
                       if (window.confirm('Send message to this provider?')) {
-                        setError('Message feature coming soon');
+                        console.log('Message feature coming soon');
                       }
                     }}
                     className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"

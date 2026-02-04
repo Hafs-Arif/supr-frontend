@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../utils/api';
 
 const slugify = (s) =>
@@ -44,12 +44,7 @@ function Addons() {
 
   const [formData, setFormData] = useState(emptyForm);
 
-  useEffect(() => {
-    fetchAddons();
-    fetchCategories();
-  }, [page, limit]);
-
-  const fetchAddons = async () => {
+  const fetchAddons = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -93,9 +88,9 @@ function Addons() {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [page, limit]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const res = await api.get('/admin/homeservices/categories');
       const data = res.data;
@@ -113,7 +108,12 @@ function Addons() {
       console.error(e);
       setCategories([]);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchAddons();
+    fetchCategories();
+  }, [fetchAddons, fetchCategories]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -180,11 +180,10 @@ function Addons() {
         payload.strikethroughPrice = strikethroughPriceValue;
       }
 
-      let response;
       if (isEditing && editingId) {
-        response = await api.put(`/admin/homeservices/addons/${editingId}`, payload);
+        await api.put(`/admin/homeservices/addons/${editingId}`, payload);
       } else {
-        response = await api.post('/admin/homeservices/addons', payload);
+        await api.post('/admin/homeservices/addons', payload);
       }
 
       setShowModal(false);
@@ -591,7 +590,6 @@ function Addons() {
         <div className="lg:hidden p-4 space-y-4">
           {filteredAddons.length > 0 ? (
             filteredAddons.map((addon) => {
-              const discount = calculateDiscount(addon.price, addon.strikethroughPrice);
               
               return (
                 <div key={addon.id || addon.addonSlug || addon.slug} className="bg-white rounded-lg border border-gray-200 p-4">
