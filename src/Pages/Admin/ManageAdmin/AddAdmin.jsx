@@ -201,7 +201,7 @@ function AddAdmin() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium py-3 rounded-md shadow-md transition-colors flex items-center justify-center"
+            className="w-full bg-[#018a3e] hover:bg-[#004036] disabled:bg-indigo-400 text-white font-medium py-3 rounded-md shadow-md transition-colors flex items-center justify-center"
           >
             {isLoading ? (
               <>

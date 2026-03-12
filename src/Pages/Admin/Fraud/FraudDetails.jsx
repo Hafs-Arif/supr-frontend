@@ -297,7 +297,7 @@ export default function FraudDetails() {
               <button
                 onClick={submitReview}
                 disabled={actionLoading || !reviewStatus}
-                className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition flex items-center justify-center space-x-2"
+                className="w-full py-2 bg-[#018a3e] hover:bg-[#004036] disabled:bg-gray-400 text-white font-medium rounded-lg transition flex items-center justify-center space-x-2"
               >
                 {actionLoading ? (
                   <>

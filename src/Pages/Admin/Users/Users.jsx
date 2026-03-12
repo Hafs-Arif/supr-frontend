@@ -385,7 +385,7 @@ function Users() {
             </button>
             <button 
               onClick={handleExport}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
+              className="flex items-center space-x-2 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg hover:bg-[#004036] transition shadow-sm"
             >
               <Download size={18} />
               <span>Export Report</span>
@@ -647,7 +647,7 @@ function Users() {
                       <div className="flex items-center space-x-2">
                         <button 
                           onClick={() => openUserModal(user)}
-                          className="flex items-center space-x-1 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                          className="flex items-center space-x-1 px-3 py-1.5 bg-[#0F4D0F] text-white text-sm font-medium rounded-lg hover:bg-[#004036] transition"
                         >
                           <Eye size={14} />
                           <span>View</span>
@@ -750,7 +750,7 @@ function Users() {
                   <div className="flex justify-end items-center mt-4 pt-3 border-t border-gray-200">
                     <button 
                       onClick={() => openUserModal(user)}
-                      className="flex items-center space-x-1 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                      className="flex items-center space-x-1 px-3 py-1.5 bg-[#0F4D0F] text-white text-sm font-medium rounded-lg hover:bg-[#004036] transition"
                     >
                       <Eye size={14} />
                       <span>View Details</span>
@@ -834,7 +834,7 @@ function Users() {
                       onClick={() => setPage(pageNum)}
                       className={`min-w-[40px] px-3 py-1.5 rounded-md text-sm font-medium transition ${
                         page === pageNum
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[#0F4D0F] text-white'
                           : 'border border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
                       }`}
                       disabled={loading}
@@ -1177,7 +1177,7 @@ function Users() {
                       setActionMessage('Message feature coming soon');
                     }
                   }}
-                  className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                  className="flex items-center space-x-1 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg text-sm font-medium hover:bg-[#004036] transition"
                 >
                   <MessageCircle size={14} />
                   <span>Message User</span>

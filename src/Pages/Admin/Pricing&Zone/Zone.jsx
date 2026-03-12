@@ -299,7 +299,7 @@ function Zone() {
             </button>
             <button 
               onClick={() => navigate('/admin/create-zone')}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
+              className="flex items-center space-x-2 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg hover:bg-[#004036] transition shadow-sm"
             >
               <Plus size={18} />
               <span>Add Zone</span>

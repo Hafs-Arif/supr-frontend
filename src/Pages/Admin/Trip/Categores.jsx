@@ -143,7 +143,7 @@ const handleSubmit = async (e) => {
         <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-[#0F4D0F] text-white px-4 py-2 rounded-md hover:bg-[#004036]"
         >
           Add Category
         </button>
@@ -398,7 +398,7 @@ const handleSubmit = async (e) => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-[#0F4D0F] text-white rounded-md text-sm font-medium hover:bg-[#004036] disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Creating...' : 'Create Category'}
                   </button>

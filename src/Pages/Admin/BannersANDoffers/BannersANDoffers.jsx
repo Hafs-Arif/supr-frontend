@@ -318,7 +318,7 @@ const BannersAndOffers = () => {
             </div>
             <button
               onClick={handleAddItem}
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-[#018a3e] text-white rounded-lg hover:bg-[#004036] transition text-sm sm:text-base w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
               Add {activeTab === 'banners' ? 'Banner' : 'Offer'}
@@ -434,7 +434,7 @@ const BannersAndOffers = () => {
                           <div className="flex items-center space-x-2">
                             <button
                               onClick={() => handleEditItem(banner)}
-                              className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm"
+                              className="flex items-center gap-1 px-3 py-1 bg-[#0F4D0F] text-white rounded-md hover:bg-[#004036] transition text-sm"
                             >
                               <Edit className="w-3 h-3" />
                               Edit
@@ -568,7 +568,7 @@ const BannersAndOffers = () => {
                   {!searchTerm && (
                     <button
                       onClick={handleAddItem}
-                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-[#018a3e] text-white rounded-lg hover:bg-[#004036] transition text-sm"
                     >
                       <Plus className="w-4 h-4" />
                       Add New Banner
@@ -635,7 +635,7 @@ const BannersAndOffers = () => {
                           <div className="flex items-center space-x-2">
                             <button
                               onClick={() => handleEditItem(offer)}
-                              className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm"
+                              className="flex items-center gap-1 px-3 py-1 bg-[#0F4D0F] text-white rounded-md hover:bg-[#004036] transition text-sm"
                             >
                               <Edit className="w-3 h-3" />
                               Edit
@@ -766,7 +766,7 @@ const BannersAndOffers = () => {
                   {!searchTerm && (
                     <button
                       onClick={handleAddItem}
-                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+                      className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-[#018a3e] text-white rounded-lg hover:bg-[#004036] transition text-sm"
                     >
                       <Plus className="w-4 h-4" />
                       Add New Offer
@@ -943,7 +943,7 @@ const BannersAndOffers = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base order-1 sm:order-2"
+                  className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-[#018a3e] text-white rounded-lg hover:bg-[#004036] transition text-sm sm:text-base order-1 sm:order-2"
                 >
                   <Save className="w-4 h-4" />
                   {selectedItem ? 'Update' : 'Create'} {activeTab === 'banners' ? 'Banner' : 'Offer'}

@@ -67,7 +67,7 @@ export default function SOSList() {
             onClick={() => { setStatus(s); setPage(1); }}
             className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
               status === s
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-[#018a3e] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
             }`}
           >
@@ -124,7 +124,7 @@ export default function SOSList() {
                   </div>
                   <Link
                     to={`/admin/sos/${s.id}`}
-                    className="ml-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition whitespace-nowrap"
+                    className="ml-4 px-4 py-2 bg-[#018a3e] hover:bg-[#004036] text-white text-sm font-medium rounded-lg transition whitespace-nowrap"
                   >
                     View Details
                   </Link>

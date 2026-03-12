@@ -320,7 +320,7 @@ export default function Dashboard() {
       onClick={onClick}
       className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
         currentRange === range
-          ? "bg-indigo-600 text-white shadow-md"
+          ? "bg-[#018a3e] text-white shadow-md"
           : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
       }`}
     >

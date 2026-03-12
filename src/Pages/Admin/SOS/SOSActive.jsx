@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AlertTriangle, MapPin, Clock, User, Phone, Mail, CheckCircle, X } from 'lucide-react';
-import api from '../../../utils/api';
+import { AlertTriangle, MapPin, Clock, User, Phone, Mail, CheckCircle, X, Loader } from 'lucide-react';
+import SOSService from '../../../Services/SOSService';
+import wsService from '../../../Services/WebSocketService';
 
 export default function SOSActive() {
   const [alert, setAlert] = useState(null);
@@ -8,13 +9,21 @@ export default function SOSActive() {
   const [actionLoading, setActionLoading] = useState(null);
   const [notes, setNotes] = useState('');
   const [success, setSuccess] = useState('');
+  const [liveLocation, setLiveLocation] = useState(null);
+  const [locationUpdateCount, setLocationUpdateCount] = useState(0);
 
   const fetchActive = async () => {
     try {
-      const res = await api.get('/sos/active');
-      setAlert(res.data?.data || null);
+      const alerts = await SOSService.getActiveSOSAlerts();
+      if (alerts && alerts.length > 0) {
+        setAlert(alerts[0]);
+        setLocationUpdateCount(0);
+      } else {
+        setAlert(null);
+      }
     } catch (err) {
-      console.error('No active SOS alert');
+      console.error('Error fetching active SOS alerts:', err);
+      setAlert(null);
     } finally {
       setLoading(false);
     }
@@ -23,7 +32,24 @@ export default function SOSActive() {
   useEffect(() => {
     fetchActive();
     const interval = setInterval(fetchActive, 5000);
-    return () => clearInterval(interval);
+
+    // Setup WebSocket listener for live location updates
+    const handleSOSUpdate = (data) => {
+      if (data.sosActive) {
+        setLiveLocation({
+          latitude: data.location.latitude,
+          longitude: data.location.longitude,
+        });
+        setLocationUpdateCount((prev) => prev + 1);
+      }
+    };
+
+    wsService.on('sos_update', handleSOSUpdate);
+
+    return () => {
+      clearInterval(interval);
+      wsService.off('sos_update', handleSOSUpdate);
+    };
   }, []);
 
   const postAction = async (action) => {
@@ -31,7 +57,14 @@ export default function SOSActive() {
     setActionLoading(action);
     try {
       const payload = action === 'resolve' ? { notes } : {};
-      await api.post(`/sos/${alert.id}/${action}`, payload);
+      
+      if (action === 'resolve') {
+        await SOSService.resolveSOSAlert(alert.id, notes);
+      } else {
+        // For cancel or other actions, could be extended
+        await SOSService.resolveSOSAlert(alert.id, `SOS ${action}led`);
+      }
+
       setSuccess(`SOS ${action}d successfully`);
       setTimeout(() => {
         fetchActive();
@@ -39,7 +72,7 @@ export default function SOSActive() {
         setNotes('');
       }, 1500);
     } catch (err) {
-      const msg = err?.response?.data?.message || `Failed to ${action} SOS`;
+      const msg = SOSService.getErrorMessage(err);
       setSuccess(`Error: ${msg}`);
     } finally {
       setActionLoading(null);
@@ -49,7 +82,7 @@ export default function SOSActive() {
   if (loading) {
     return (
       <div className="p-6 flex justify-center items-center h-40">
-        <div className="animate-spin h-8 w-8 border-4 border-indigo-600 border-t-transparent rounded-full"></div>
+        <Loader size={32} className="animate-spin text-indigo-600" />
       </div>
     );
   }
@@ -67,6 +100,7 @@ export default function SOSActive() {
   }
 
   const formatTime = (date) => new Date(date).toLocaleString();
+  const displayLocation = liveLocation || alert;
 
   return (
     <div className="p-6" style={{ backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
@@ -77,7 +111,9 @@ export default function SOSActive() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Active SOS Emergency</h2>
-            <p className="text-red-600 text-sm">Immediate attention required</p>
+            <p className="text-red-600 text-sm">
+              {locationUpdateCount > 0 ? `📍 Live location streaming (${locationUpdateCount} updates)` : 'Immediate attention required'}
+            </p>
           </div>
         </div>
       </div>
@@ -140,17 +176,22 @@ export default function SOSActive() {
             <div className="pb-4 border-b border-gray-200">
               <p className="text-gray-600 mb-1 flex items-center space-x-2">
                 <MapPin size={14} />
-                <span>Location</span>
+                <span>Live Location {locationUpdateCount > 0 && '(Updating)'}</span>
               </p>
-              <p className="text-gray-900">Lat: {alert.latitude.toFixed(6)}, Lon: {alert.longitude.toFixed(6)}</p>
+              <p className="text-gray-900">
+                Lat: {displayLocation.latitude.toFixed(6)}, Lon: {displayLocation.longitude.toFixed(6)}
+              </p>
               <a
-                href={`https://maps.google.com/?q=${alert.latitude},${alert.longitude}`}
+                href={`https://maps.google.com/?q=${displayLocation.latitude},${displayLocation.longitude}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-indigo-600 hover:text-indigo-700 text-xs mt-1 block"
               >
                 → Open in Google Maps
               </a>
+              {locationUpdateCount > 0 && (
+                <p className="text-green-600 text-xs mt-2">✓ Location being streamed in real-time</p>
+              )}
             </div>
 
             <div className="pb-4 border-b border-gray-200">
@@ -199,7 +240,7 @@ export default function SOSActive() {
             >
               {actionLoading === 'resolve' ? (
                 <>
-                  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  <Loader size={16} className="animate-spin" />
                   <span>Resolving...</span>
                 </>
               ) : (
@@ -217,7 +258,7 @@ export default function SOSActive() {
             >
               {actionLoading === 'cancel' ? (
                 <>
-                  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  <Loader size={16} className="animate-spin" />
                   <span>Cancelling...</span>
                 </>
               ) : (

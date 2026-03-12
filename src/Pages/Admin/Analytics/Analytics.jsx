@@ -67,7 +67,7 @@ export default function Analytics() {
             <option value="month">Month</option>
           </select>
         </label>
-        <button onClick={fetchAll} disabled={loading} className="ml-2 px-3 py-2 bg-indigo-600 text-white rounded">{loading ? 'Loading...' : 'Refetch'}</button>
+        <button onClick={fetchAll} disabled={loading} className="ml-2 px-3 py-2 bg-[#018a3e] text-white rounded">{loading ? 'Loading...' : 'Refetch'}</button>
       </div>
 
       {error && <div className="bg-red-100 text-red-800 p-3 rounded mb-4">{error}</div>}

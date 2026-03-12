@@ -50,7 +50,7 @@ function ManageAdmin() {
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             <span>Refresh</span>
           </button>
-          <button onClick={addAdmin} className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow transition">
+          <button onClick={addAdmin} className="flex items-center space-x-2 bg-[#018a3e] hover:bg-[#004036] text-white px-4 py-2 rounded-md shadow transition">
             <Plus size={18} />
             Add New Admin
           </button>

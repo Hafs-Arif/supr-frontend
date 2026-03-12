@@ -27,8 +27,10 @@ import SOSDetails from "./Pages/Admin/SOS/SOSDetails";
 import FraudStats from "./Pages/Admin/Fraud/FraudStats";
 import FraudPatterns from "./Pages/Admin/Fraud/FraudPatterns";
 import FraudDetails from "./Pages/Admin/Fraud/FraudDetails";
+import ChatPage from "./Pages/Admin/Chat/ChatPage";
 import { AuthProvider, useAuth } from "./Components/Auth/AuthContext";
 import ProtectedRoute from "./Components/Auth/ProtectedRoute";
+import AdminSupportChat from "./Components/Chat/AdminSupportChat";
 
 function App() {
   function LoginWrapper() {
@@ -36,6 +38,7 @@ function App() {
     if (loading) return null;
     return isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <LoginComponent />;
   }
+  
   return (
     <AuthProvider>
       <Router>
@@ -56,6 +59,7 @@ function App() {
           >
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="dashboard/stats" element={<Dashboard />} />
+            <Route path="chat" element={<ChatPage />} />
             <Route path="all-services" element={<Services />} />
             <Route path="all-addons" element={<Addons />} />
             <Route path="all-users" element={<Users />} />
@@ -80,6 +84,11 @@ function App() {
             <Route path="fraud/patterns/:id" element={<FraudDetails />} />
           </Route>
         </Routes>
+
+        {/* Global Admin Support Chat Widget */}
+        <ProtectedRoute>
+          <AdminSupportChat />
+        </ProtectedRoute>
       </Router>
       <ToastContainer />
     </AuthProvider>

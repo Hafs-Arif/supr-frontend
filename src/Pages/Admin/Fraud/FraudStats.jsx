@@ -173,7 +173,7 @@ export default function FraudStats() {
                     <p className="text-gray-700 capitalize font-medium text-sm mb-1">{type.replace(/_/g, ' ')}</p>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-indigo-600 h-2 rounded-full"
+                        className="bg-[#018a3e] h-2 rounded-full"
                         style={{ width: `${(count / (stats?.totalPatterns || 1)) * 100}%` }}
                       ></div>
                     </div>

@@ -28,7 +28,7 @@ function Header({ toggleSidebar, isSidebarOpen }) {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg z-50">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-[#004036] text-white shadow-lg z-50">
       <div className="flex items-center justify-between h-full px-4 md:px-6">
         {/* Left Section */}
         <div className="flex items-center space-x-3">
@@ -43,7 +43,7 @@ function Header({ toggleSidebar, isSidebarOpen }) {
 
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-md">
-              <Building2 className="text-indigo-600" size={18} />
+              <Building2 className="text-[#018a3e]" size={18} />
             </div>
             <div className="hidden sm:block">
               <span className="font-bold text-lg">Supr Admin</span>

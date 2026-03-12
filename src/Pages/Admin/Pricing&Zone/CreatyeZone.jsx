@@ -103,7 +103,7 @@ function CreateZone() {
             </button>
             <button 
               onClick={handleSubmit}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm"
+              className="flex items-center space-x-2 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg hover:bg-[#004036] transition shadow-sm"
             >
               <Save size={18} />
               <span>Create Zone</span>
@@ -175,7 +175,7 @@ function CreateZone() {
               {mapPoints.map((point, index) => (
                 <div
                   key={index}
-                  className="absolute w-3 h-3 bg-blue-600 border-2 border-white rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-lg"
+                  className="absolute w-3 h-3 bg-[#0F4D0F] border-2 border-white rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-lg"
                   style={{
                     left: `${point.x}%`,
                     top: `${point.y}%`,
@@ -207,7 +207,7 @@ function CreateZone() {
               )}
 
               {/* Points Counter */}
-              <div className="absolute bottom-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+              <div className="absolute bottom-4 left-4 bg-[#0F4D0F] text-white px-3 py-1 rounded-full text-sm font-medium">
                 {mapPoints.length} points
               </div>
             </div>

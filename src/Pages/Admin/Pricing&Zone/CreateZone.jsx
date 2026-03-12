@@ -276,7 +276,7 @@ function CreateZone() {
             <button 
               onClick={handleSubmit}
               disabled={isLoading}
-              className={`flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`flex items-center space-x-2 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg hover:bg-[#004036] transition shadow-sm ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Save size={18} />
               <span>{isLoading ? 'Creating...' : 'Create Zone'}</span>
@@ -396,7 +396,7 @@ function CreateZone() {
             </div>
 
             {/* Points Counter */}
-            <div className="absolute bottom-4 left-4 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
+            <div className="absolute bottom-4 left-4 bg-[#0F4D0F] text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
               <MapPin size={16} />
               <span>{mapPoints.length} point{mapPoints.length !== 1 ? 's' : ''}</span>
               {mapPoints.length >= 3 && (

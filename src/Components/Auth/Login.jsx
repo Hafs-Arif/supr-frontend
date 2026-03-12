@@ -71,7 +71,7 @@ const LoginComponent = () => {
         {/* Header */}
         <div className="text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="bg-indigo-600 p-2 rounded-lg">
+            <div className="bg-[#018a3e] p-2 rounded-lg">
               <Smartphone className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -173,7 +173,7 @@ const LoginComponent = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#018a3e] hover:bg-[#004036] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span className="flex items-center">
                 {isLoading ? (

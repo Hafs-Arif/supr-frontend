@@ -282,7 +282,7 @@ export default function SurgePricingMap() {
             <button
               onClick={fetchSurgeZones}
               disabled={loading}
-              className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition flex items-center justify-center space-x-2"
+              className="w-full px-4 py-2 bg-[#018a3e] hover:bg-[#004036] disabled:bg-gray-400 text-white font-medium rounded-lg transition flex items-center justify-center space-x-2"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
               <span>Refresh</span>

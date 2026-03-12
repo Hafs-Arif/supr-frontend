@@ -468,7 +468,7 @@ function MapView() {
                   </div>
 
                   {/* Action Button */}
-                  <button className="w-full flex items-center justify-center space-x-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
+                  <button className="w-full flex items-center justify-center space-x-2 py-2 bg-[#0F4D0F] text-white rounded-lg hover:bg-[#004036] transition text-sm">
                     <Eye size={14} />
                     <span>View Zone Details</span>
                   </button>

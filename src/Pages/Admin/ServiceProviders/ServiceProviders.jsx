@@ -515,7 +515,7 @@ function ServiceProviders() {
                         <button
                           onClick={() => updateProviderStatus(provider.id, 'active')}
                           disabled={actionLoading}
-                          className="p-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 text-white bg-[#018a3e] hover:bg-[#004036] rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                           title="Activate Provider"
                         >
                           {actionLoading ? '...' : 'Activate'}
@@ -624,7 +624,7 @@ function ServiceProviders() {
                       <button
                         onClick={() => updateProviderStatus(provider.id, 'active')}
                         disabled={actionLoading}
-                        className="px-3 py-1 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 py-1 bg-[#018a3e] text-white rounded-md text-sm hover:bg-[#004036] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {actionLoading ? '...' : 'Activate'}
                       </button>
@@ -854,7 +854,7 @@ function ServiceProviders() {
                         console.log('Message feature coming soon');
                       }
                     }}
-                    className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                    className="flex items-center space-x-1 px-4 py-2 bg-[#0F4D0F] text-white rounded-lg text-sm font-medium hover:bg-[#004036] transition"
                   >
                     <MessageCircle size={14} />
                     <span>Message Provider</span>

@@ -248,7 +248,7 @@ export default function FraudPatterns() {
                 onClick={() => setPage(p)}
                 className={`px-3 py-2 rounded-lg font-medium transition ${
                   page === p
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-[#018a3e] text-white'
                     : 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50'
                 }`}
               >

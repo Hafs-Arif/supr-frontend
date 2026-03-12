@@ -738,7 +738,7 @@ function Earning() {
 
               {/* Action Buttons */}
               <div className="flex space-x-3 pt-4 border-t border-gray-200">
-                <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium">
+                <button className="flex-1 bg-[#0F4D0F] text-white py-2 px-4 rounded-lg hover:bg-[#004036] transition font-medium">
                   View Full History
                 </button>
                 <button className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition font-medium">
